@@ -182,6 +182,7 @@ import {
   getCurrentUserDetail,
   isLoggedIn,
 } from "../../Services/auth";
+import { BsBellFill } from "react-icons/bs";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
@@ -437,7 +438,7 @@ const Navbar = () => {
                   className="text-black no-underline hover:text-orange-500"
                   to="/event/maps"
                 >
-                  Maps
+                  Events
                 </Link>
               </li>
             </>
@@ -448,6 +449,10 @@ const Navbar = () => {
       <div className="flex items-center">
         {login && (
           <>
+            <button>
+              <BsBellFill className=" text-black hover:text-orange-500 transition-colors duration-200 mr-[30px]" />
+            </button>
+
             <button
               onClick={logout}
               className="font-bold text-black hover:text-orange-500 transition-colors duration-200"
@@ -455,7 +460,7 @@ const Navbar = () => {
               Logout
             </button>
             <h3 className="font-bold pl-4 text-black hover:text-orange-500">
-              <Link to="/userProfile">
+              <Link className="mr-[50px]" to="/ngo/dashboard">
                 Welcome, {user ? user.name : "User"}
               </Link>
               {/* Welcome, {user ? user.name : "User"} */}

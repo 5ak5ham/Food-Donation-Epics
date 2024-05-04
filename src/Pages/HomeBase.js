@@ -6,7 +6,7 @@ function HomeBase() {
       <div>
         <figure>
           <img
-            src="ngoAnnapurti.jpg"
+            src="/ngoAnnapurti.jpg"
             alt="Slider"
             className="brightness-75 h-80%"
           />
