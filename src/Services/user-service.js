@@ -12,6 +12,12 @@ export const login = (ngo) => {
     .then((response) => response.data);
 };
 
+export const userLogin = (user) => {
+  return myAxios
+    .post("http://localhost:8000/accounts/api/login/", user)
+    .then((response) => response.data);
+};
+
 export const isVerified = (email) => {
   return myAxios.get("http://localhost:1212/api/v1/ngo/isEnabled", {
     params: { email },

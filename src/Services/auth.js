@@ -15,6 +15,13 @@ export const doLogout = (next) => {
 
 export const getCurrentUserDetail = () => {
   if (isLoggedIn()) {
+    return JSON.parse(localStorage.getItem("data")).user;
+  } else {
+    return false;
+  }
+};
+export const getCurrentNgoDetail = () => {
+  if (isLoggedIn()) {
     return JSON.parse(localStorage.getItem("data")).ngo;
   } else {
     return false;

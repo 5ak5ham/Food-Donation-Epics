@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMailOutline, IoLockClosedOutline } from "react-icons/io5";
 import { doLogin } from "../Services/auth";
-import HomeBase from "./HomeBase";
 
 export default function Login() {
   const navigate = useNavigate();

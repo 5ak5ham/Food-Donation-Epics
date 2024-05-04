@@ -4,9 +4,16 @@ import { GrFormEdit } from "react-icons/gr";
 // Using react-icons for star ratings
 import Base from "../../Components/Base";
 import { Link } from "react-router-dom";
-import HomeBase from "../HomeBase";
+import { getCurrentUserDetail } from "../../Services/auth";
+import { useState, useEffect } from "react";
 
 function NgoDashboard() {
+  const [user, setUser] = useState(undefined);
+
+  useEffect(() => {
+    setUser(getCurrentUserDetail());
+  });
+
   return (
     <>
       <Base />

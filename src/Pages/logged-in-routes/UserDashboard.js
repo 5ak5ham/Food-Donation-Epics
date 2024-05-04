@@ -4,8 +4,17 @@ import { GrFormEdit } from "react-icons/gr";
 // Using react-icons for star ratings
 import { Link } from "react-router-dom";
 import Base from "../../Components/Base";
+import { useState, useEffect } from "react";
+import { getCurrentUserDetail } from "../../Services/auth";
 
 function UserDashboard() {
+  const [user, setUser] = useState(undefined);
+
+  useEffect(() => {
+    const userDetails = getCurrentUserDetail();
+    setUser(userDetails);
+  }, []);
+
   return (
     <>
       <Base />
@@ -18,7 +27,9 @@ function UserDashboard() {
               alt="Jeremy Rose"
             />
             <div>
-              <h2 className="text-2xl font-semibold">Jeremy Rose</h2>
+              <h2 className="text-2xl font-semibold">
+                {user ? user.first_name + " " + user.last_name : "User"}
+              </h2>
               <p className="text-sm text-gray-500">Product Designer</p>
               <p className="text-sm text-gray-500">New York, NY</p>
               <div className="flex mt-1">
@@ -45,13 +56,19 @@ function UserDashboard() {
             <div>
               <h3 className="font-semibold text-lg">Contact Information</h3>
               <p>
-                <strong>Phone:</strong> +1 234 567 890
+                <strong>Phone:</strong>{" "}
+                {user ? (user.phone ? user.phone : "8178227498") : "9310143440"}
               </p>
               <p>
-                <strong>Address:</strong> 525 6th Street, New York, NY 10011
+                <strong>Address:</strong>
+                {user
+                  ? user.address
+                    ? user.address
+                    : "525 6th Street, New York, NY 10011"
+                  : "525 6th Street, New York, NY 10011"}
               </p>
               <p>
-                <strong>Email:</strong> hello@jeremyrose.com
+                <strong>Email:</strong> {user ? user.email : "none"}
               </p>
             </div>
             <div>
