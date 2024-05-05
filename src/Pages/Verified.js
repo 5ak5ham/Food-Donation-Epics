@@ -17,7 +17,7 @@ function Verified() {
         if (response.data === true) {
           setVerificationStatus("verified");
           clearInterval(verificationInterval);
-          navigate("/login");
+          navigate("/userLogin");
         } else {
           setVerificationStatus("unverified");
         }
