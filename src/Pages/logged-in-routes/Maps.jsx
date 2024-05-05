@@ -1,60 +1,56 @@
-// import React from "react";
-// import "../CSS/maps.css";
-// import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-// // import Navbar from "../../Components/Navbar/Navbar";
-// import Base from "../../Components/Base";
-
-// const position = [23.0709, 76.8317];
-// function Maps() {
-//   const [formPosition, setFormPosition] = useState(position);
-
-//   function handleSubmit(e) {
-//     e.preventDefault();
-//     ChangeCenter(formPosition);
-//   }
-
-//   return (
-//     <>
-//       <Base />
-//       <MapContainer center={position} zoom={13}>
-//         <TileLayer
-//           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//         />
-//         <Marker position={position}>
-//           <img src="bg.webp" alt="" />
-//           <Popup>
-//             FOOD DONATION <br /> ON 9 MARCH, 2024.
-//           </Popup>
-//         </Marker>
-//       </MapContainer>
-//     </>
-//   );
-// }
-
-// function ChangeCenter({ position }) {
-//   const map = useMap();
-
-//   map.setView(position, 6);
-//   return null;
-// }
-
-// export default Maps;
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../CSS/maps.css";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import Navbar from "../../Components/Navbar/Navbar";
-
-const position = [23.0709, 76.8317];
+import { getCurrentUserDetail } from "../../Services/auth";
+import { useGeolocated } from "react-geolocated";
+import { useMapEvents } from "react-leaflet";
 
 function Maps() {
-  const [formPosition, setFormPosition] = useState(position);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    date: "",
+    time: "",
+    address: "",
+    latitude: 0,
+    longitude: 0,
+  });
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    ChangeCenter(formPosition);
-  }
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const { coords } = useGeolocated({
+    positionOptions: {
+      enableHighAccuracy: true,
+    },
+    userDecisionTimeout: 5000,
+  });
+
+  const initialPosition = [53.0709, 76.8317];
+  const [mapCenter, setMapCenter] = useState(initialPosition);
+
+  useEffect(() => {
+    if (coords) {
+      setMapCenter([coords.latitude, coords.longitude]);
+    }
+  }, [coords]);
+
+  const [user, setUser] = useState(undefined);
+
+  useEffect(() => {
+    const userDetails = getCurrentUserDetail();
+    setUser(userDetails);
+  }, []);
+
+  const [clickedLocation, setClickedLocation] = useState(null);
+
+  const handleLocationClick = (location) => {
+    setClickedLocation(location);
+  };
 
   return (
     <>
@@ -62,35 +58,36 @@ function Maps() {
       <div className="grid grid-cols-2 h-screen">
         <div className="col-span-1">
           <MapContainer
-            center={position}
+            key={`${mapCenter[0]}-${mapCenter[1]}`}
+            center={mapCenter}
             zoom={13}
-            style={{ height: "100%", width: "100%" }}
+            className="h-[100vh] w-[100vh]"
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={position}>
-              <Popup>
-                TITLE <br /> DATE.
+            <Marker position={initialPosition}>
+              <Popup className="bg-red">
                 <button>
-                  <Link className="text-blue font-bold" to="/event/description">
+                  <Link to="/event/description" className="text-blue font-bold">
                     View More
                   </Link>
                 </button>
               </Popup>
             </Marker>
+            <LocationMarker onLocationClick={handleLocationClick} />
           </MapContainer>
         </div>
 
         <div className="col-span-1 bg-yellow-100 flex items-center justify-center">
-          <form className="w-full max-w-md p-5" onSubmit={handleSubmit}>
+          <form className="w-full max-w-md p-5">
             <h2 className="text-black font-bold align-middle ml-[165px] mb-[20px]">
               Add New Event
             </h2>
             <div className="mb-4">
               <label
-                htmlFor="Title"
+                htmlFor="title"
                 className="block text-sm font-bold text-gray-700"
               >
                 Title Of Event
@@ -98,35 +95,32 @@ function Maps() {
               <input
                 type="text"
                 id="title"
+                name="title"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Enter Title"
-                value={formPosition[0]}
-                onChange={(e) =>
-                  setFormPosition([e.target.value, formPosition[1]])
-                }
+                value={formData.title}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-4">
               <label
-                htmlFor="Title"
+                htmlFor="description"
                 className="block text-sm font-bold text-gray-700"
               >
                 Description
               </label>
               <textarea
-                type="text"
-                id="title"
+                id="description"
+                name="description"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Enter Description"
-                value={formPosition[0]}
-                onChange={(e) =>
-                  setFormPosition([e.target.value, formPosition[1]])
-                }
+                value={formData.description}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-4">
               <label
-                htmlFor="Date"
+                htmlFor="date"
                 className="block text-sm font-bold text-gray-700"
               >
                 Date
@@ -134,12 +128,11 @@ function Maps() {
               <input
                 type="text"
                 id="date"
+                name="date"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="DD-MM-YYYY"
-                value={formPosition[0]}
-                onChange={(e) =>
-                  setFormPosition([e.target.value, formPosition[1]])
-                }
+                value={formData.date}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-4">
@@ -152,12 +145,11 @@ function Maps() {
               <input
                 type="text"
                 id="time"
+                name="time"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="00:00 am/pm"
-                value={formPosition[0]}
-                onChange={(e) =>
-                  setFormPosition([e.target.value, formPosition[1]])
-                }
+                value={formData.time}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-4">
@@ -168,34 +160,31 @@ function Maps() {
                 Address
               </label>
               <textarea
-                type="text"
                 id="address"
+                name="address"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Enter Description"
-                value={formPosition[0]}
-                onChange={(e) =>
-                  setFormPosition([e.target.value, formPosition[1]])
-                }
+                value={formData.address}
+                onChange={handleChange}
               />
             </div>
-            {/* <div className="mb-4">
-              <label
-                htmlFor="longitude"
-                className="block text-sm font-bold text-gray-700"
-              >
-                Longitude
-              </label>
-              <input
-                type="text"
-                id="longitude"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Enter longitude"
-                value={formPosition[1]}
-                onChange={(e) =>
-                  setFormPosition([formPosition[0], e.target.value])
-                }
-              />
-            </div> */}
+
+            <input
+              type="text"
+              id="latitude"
+              name="time"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="00:00 am/pm"
+              value={clickedLocation?.lat ? clickedLocation.lat : 0}
+            />
+            <input
+              type="text"
+              id="longitude"
+              name="time"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="00:00 am/pm"
+              value={clickedLocation?.lng ? clickedLocation.lng : 0}
+            />
             <div className="flex justify-center">
               <button
                 type="submit"
@@ -211,9 +200,14 @@ function Maps() {
   );
 }
 
-function ChangeCenter(position) {
-  const map = useMap();
-  map.setView(position, map.getZoom());
+function LocationMarker({ onLocationClick }) {
+  const map = useMapEvents({
+    click(e) {
+      onLocationClick(e.latlng);
+    },
+  });
+
+  return null;
 }
 
 export default Maps;

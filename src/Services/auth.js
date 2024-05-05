@@ -20,10 +20,10 @@ export const getCurrentUserDetail = () => {
     return false;
   }
 };
-export const getCurrentNgoDetail = () => {
-  if (isLoggedIn()) {
-    return JSON.parse(localStorage.getItem("data")).ngo;
-  } else {
-    return false;
-  }
-};
+// export const getCurrentNgoDetail = () => {
+//   if (isLoggedIn()) {
+//     return JSON.parse(localStorage.getItem("data")).ngo;
+//   } else {
+//     return false;
+//   }
+// };
