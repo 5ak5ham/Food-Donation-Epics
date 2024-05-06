@@ -10,19 +10,13 @@ function RegisterNgo() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
-    registeredAddress: "",
-    chairman: "",
+    organization_name: "",
+    registered_address: "",
+    chairman_name: "",
     email: "",
-    mobileNo: "",
-    treasurer: "",
-    websiteUrl: "",
-    registrationDate: null,
-    state: "",
-    village: "",
+    phone_number: "",
     password: "",
-    memberNames: [],
-    authSignatory: "",
+    confirm_password: "",
   });
 
   const [error, setError] = useState({
@@ -42,30 +36,7 @@ function RegisterNgo() {
       return;
     }
 
-    const formattedDate = formData.registrationDate
-      ? formData.registrationDate.toLocaleDateString("en-GB")
-      : "";
-
-    const membersToSend = formData.memberNames
-      .slice(0, 4)
-      .map((name) => name || "");
-
-    const formattedData = {
-      ...formData,
-      member1: membersToSend[0] || "",
-      member2: membersToSend[1] || "",
-      member3: membersToSend[2] || "",
-      member4: membersToSend[3] || "",
-      registrationDate: formattedDate,
-    };
-
-    delete formattedData.memberNames;
-    delete formattedData.numberOfMembers;
-
-    // Implement form submission logic here, e.g., send data to a server
-    console.log(formattedData);
-
-    signup(formattedData)
+    signup(formData)
       .then((resp) => {
         console.log(resp);
         console.log("success log");
@@ -75,26 +46,16 @@ function RegisterNgo() {
           className: "toast-message",
         });
 
+        navigate("/verification", { state: { email: formData.email } });
         setFormData({
-          name: "",
-          registeredAddress: "",
-          block: "",
-          district: "",
-          chairman: "",
+          organization_name: "",
+          registered_address: "",
+          chairman_name: "",
           email: "",
-          mobileNo: "",
-          secretory: "",
-          treasurer: "",
-          websiteUrl: "",
-          state: "",
-          village: "",
+          phone_number: "",
           password: "",
-          memberNames: [],
-          registrationDate: null,
-          authSignatory: "",
+          confirm_password: "",
         });
-
-        navigate("/verification", { state: { email: formattedData.email } });
       })
       .catch((error) => {
         console.log(error);
@@ -107,171 +68,6 @@ function RegisterNgo() {
   };
 
   return (
-    // <div>
-    //   <Base />
-    //   <form className="registration-form" onSubmit={handleSubmit}>
-    //     <p className="req">*</p>
-    //     <label htmlFor="name">Name Of NGO :</label>
-    //     <input
-    //       type="text"
-    //       id="name"
-    //       name="name"
-    //       value={formData.name}
-    //       onChange={handleChange}
-    //       required
-    //     />
-    //     <p className="req">*</p>
-    //     <label htmlFor="email">Email :</label>
-    //     <input
-    //       type="email"
-    //       id="email"
-    //       name="email"
-    //       value={formData.email}
-    //       onChange={handleChange}
-    //       required
-    //     />
-    //     <p className="req">*</p>
-    //     <label htmlFor="mobileNo">Mobile Number :</label>
-    //     <input
-    //       type="text"
-    //       id="mobileNo"
-    //       name="mobileNo"
-    //       value={formData.mobileNo}
-    //       onChange={handleChange}
-    //       required
-    //     />
-
-    //     <p className="note">
-    //       Password length should range from 8-15 characters
-    //     </p>
-    //     <p className="note">
-    //       Password should contain atleast 1 uppercase letter
-    //     </p>
-    //     <p className="note">
-    //       Password should contain atleast 1 special character
-    //     </p>
-    //     <p className="note">Password should contain atleast 1 digit</p>
-    //     <label htmlFor="password">Password :</label>
-    //     <input
-    //       type="password"
-    //       id="password"
-    //       name="password"
-    //       value={formData.password}
-    //       onChange={handleChange}
-    //       required
-    //     />
-
-    //     <p className="req">*</p>
-    //     <label htmlFor="registeredAddress">Registered Address :</label>
-    //     <input
-    //       type="text"
-    //       id="registeredAddress"
-    //       name="registeredAddress"
-    //       value={formData.registeredAddress}
-    //       onChange={handleChange}
-    //       required
-    //     />
-    //     <p className="req">*</p>
-    //     <label htmlFor="chairman">Name of Chairman :</label>
-    //     <input
-    //       type="text"
-    //       id="chairman"
-    //       name="chairman"
-    //       value={formData.chairman}
-    //       onChange={handleChange}
-    //       required
-    //     />
-    //     <p className="req">*</p>
-    //     <label htmlFor="secretory">Name of Secretory :</label>
-    //     <input
-    //       type="text"
-    //       id="secretory"
-    //       name="secretory"
-    //       value={formData.secretory}
-    //       onChange={handleChange}
-    //       required
-    //     />
-    //     <p className="req">*</p>
-    //     <label htmlFor="treasurer">Name of Treasurer :</label>
-    //     <input
-    //       type="text"
-    //       id="treasurer"
-    //       name="treasurer"
-    //       value={formData.treasurer}
-    //       onChange={handleChange}
-    //       required
-    //     />
-    //     <p className="req">*</p>
-    //     <label htmlFor="authSignatory">Name of Authory Signatory :</label>
-    //     <input
-    //       type="text"
-    //       id="authSignatory"
-    //       name="authSignatory"
-    //       value={formData.authSignatory}
-    //       onChange={handleChange}
-    //       required
-    //     />
-
-    //     <label htmlFor="numberOfMembers">Number of Members (1-4) :</label>
-    //     <input
-    //       type="number"
-    //       id="numberOfMembers"
-    //       name="numberOfMembers"
-    //       min="1"
-    //       max="4"
-    //       value={formData.numberOfMembers}
-    //       onChange={handleChange}
-    //     />
-
-    //     <p className="req">*</p>
-    //     <div className="row">
-    //       <label htmlFor="state">State :</label>
-    //       <select
-    //         id="state"
-    //         name="state"
-    //         value={formData.state}
-    //         onChange={handleChange}
-    //         required
-    //       >
-    //         <option value="">Select State</option>
-    //         {statesData.map((state) => (
-    //           <option key={state.state} value={state.state}>
-    //             {state.state}
-    //           </option>
-    //         ))}
-    //       </select>
-    //     </div>
-    //     <p className="req">*</p>
-    //     <label htmlFor="block">Block :</label>
-    //     <input
-    //       type="text"
-    //       id="block"
-    //       name="block"
-    //       value={formData.block}
-    //       onChange={handleChange}
-    //     />
-
-    //     <label htmlFor="village">Village :</label>
-    //     <input
-    //       type="text"
-    //       id="village"
-    //       name="village"
-    //       value={formData.village}
-    //       onChange={handleChange}
-    //     />
-
-    //     <label htmlFor="websiteUrl">URL of Website :</label>
-    //     <input
-    //       type="text"
-    //       id="websiteUrl"
-    //       name="websiteUrl"
-    //       value={formData.websiteUrl}
-    //       onChange={handleChange}
-    //     />=
-
-    //     <button type="submit">Register NGO</button>
-    //   </form>
-    // </div>
     <>
       <Base />
       <div className=" min-h-screen flex items-center justify-center bg-gradient-to-b from-yellow-50 to-yellow-200">
@@ -281,7 +77,7 @@ function RegisterNgo() {
               NGO Registration
             </h2>
           </div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-6 flex">
               <div className="w-1/2 pr-2">
                 <label
@@ -292,9 +88,12 @@ function RegisterNgo() {
                 </label>
                 <input
                   type="text"
-                  id="ngoName"
+                  id="organization_name"
+                  name="organization_name"
                   className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Enter NGO's name"
+                  value={formData.organization_name}
+                  onChange={handleChange}
                 />
               </div>
               <div className="w-1/2 pr-2">
@@ -306,9 +105,12 @@ function RegisterNgo() {
                 </label>
                 <input
                   type="text"
-                  id="chairmanName"
+                  id="chairman_name"
+                  name="chairman_name"
                   className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Enter chairman's name"
+                  value={formData.chairman_name}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -323,8 +125,11 @@ function RegisterNgo() {
               <input
                 type="email"
                 id="email"
+                name="email"
                 className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Enter email address"
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-6">
@@ -336,9 +141,12 @@ function RegisterNgo() {
               </label>
               <input
                 type="phone"
-                id="phone"
+                id="phone_number"
+                name="phone_number"
                 className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Enter email address"
+                value={formData.phone_number}
+                onChange={handleChange}
               />
             </div>
 
@@ -350,9 +158,12 @@ function RegisterNgo() {
                 Registered Address
               </label>
               <textarea
-                id="address"
+                id="registered_address"
+                name="registered_address"
                 className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Enter registered address"
+                value={formData.registered_address}
+                onChange={handleChange}
               />
             </div>
 
@@ -366,8 +177,11 @@ function RegisterNgo() {
               <input
                 type="password"
                 id="password"
+                name="password"
                 className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
 
@@ -380,13 +194,16 @@ function RegisterNgo() {
               </label>
               <input
                 type="password"
-                id="confirmPassword"
+                id="confirm_password"
+                name="confirm_password"
                 className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Confirm your password"
+                value={formData.confirm_password}
+                onChange={handleChange}
               />
             </div>
 
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <label
                 className="block text-gray-700 text-lg font-bold mb-3"
                 htmlFor="verification"
@@ -398,7 +215,7 @@ function RegisterNgo() {
                 id="verification"
                 className="shadow appearance-none border rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
-            </div>
+            </div> */}
 
             <div className="flex items-center justify-center">
               <button

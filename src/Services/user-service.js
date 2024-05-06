@@ -1,8 +1,14 @@
 import { myAxios } from "./helper";
 /* NGO SIGNUP AND LOGIN*/
-export const signup = (ngo) => {
+export const signup = (user) => {
   return myAxios
-    .post("http://localhost:1212/api/v1/ngo/register", ngo)
+    .post("http://localhost:8000/accounts/api/register-organization/", user)
+    .then((response) => response.data);
+};
+
+export const login = (user) => {
+  return myAxios
+    .post("http://localhost:8000/accounts/api/login-organization/", user)
     .then((response) => response.data);
 };
 

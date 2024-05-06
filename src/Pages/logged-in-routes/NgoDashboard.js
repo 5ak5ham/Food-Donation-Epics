@@ -6,14 +6,28 @@ import Base from "../../Components/Base";
 import { Link } from "react-router-dom";
 import { getCurrentUserDetail } from "../../Services/auth";
 import { useState, useEffect } from "react";
+import { parseISO, format } from "date-fns";
 
 function NgoDashboard() {
+  // Outputs: "May 5th, 2024"
+
   const [user, setUser] = useState(undefined);
 
   useEffect(() => {
     setUser(getCurrentUserDetail());
-  });
+  }, []);
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return ""; // Check if the date string is there
+    const date = parseISO(dateStr);
+    return format(date, "MMMM do, yyyy");
+  };
+
+  const dateStr = user
+    ? user.organization_created_at
+    : "2024-05-05T10:12:11.782928Z";
+
+  const date1 = formatDate(dateStr);
   return (
     <>
       <Base />
@@ -22,7 +36,9 @@ function NgoDashboard() {
         <div className="bg-transparent shadow-2xl rounded-lg p-6 flex flex-col md:flex-row items-start md:items-center justify-between">
           <div className="flex items-center">
             <div>
-              <h2 className="text-2xl font-semibold">NGO NAME</h2>
+              <h2 className="text-2xl font-semibold">
+                {user ? user.organization?.organization_name : "NGO"}
+              </h2>
               {/* <p className="text-sm text-gray-500">Product Designer</p>
               <p className="text-sm text-gray-500">New York, NY</p> */}
               <div className="flex mt-1">
@@ -49,16 +65,19 @@ function NgoDashboard() {
             <div>
               <h3 className="font-semibold text-lg">NGO Contact Information</h3>
               <p>
-                <strong>Phone:</strong> +1 234 567 890
+                <strong>Phone:</strong>{" "}
+                {user ? user.phone_number : "8343493294"}
               </p>
               <p>
-                <strong>Name of Chairman:</strong> Saksham Agrawal
+                <strong>Name of Chairman:</strong>{" "}
+                {user ? user.chairman_name : "ABC"}
               </p>
               <p>
-                <strong>Address:</strong> 525 6th Street, New York, NY 10011
+                <strong>Address:</strong>{" "}
+                {user ? user.organization.registered_address : "abc"}
               </p>
               <p>
-                <strong>Email:</strong> hello@jeremyrose.com
+                <strong>Email:</strong> {user ? user.email : "abc"}
               </p>
             </div>
             <div>
@@ -66,7 +85,7 @@ function NgoDashboard() {
                 Additional Information
               </h3>
               <p>
-                <strong>JOINED ON:</strong> June 5th, 1992
+                <strong>JOINED ON:</strong> {date1}
               </p>
             </div>
             <div className="ml-[90vw] mt-0">

@@ -57,7 +57,11 @@ function UserDashboard() {
               <h3 className="font-semibold text-lg">Contact Information</h3>
               <p>
                 <strong>Phone:</strong>{" "}
-                {user ? (user.phone ? user.phone : "8178227498") : "9310143440"}
+                {user
+                  ? user.phone_number
+                    ? user.phone_number
+                    : "8178227498"
+                  : "9310143440"}
               </p>
               <p>
                 <strong>Address:</strong>

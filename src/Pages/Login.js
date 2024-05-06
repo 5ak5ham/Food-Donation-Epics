@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Base from "../Components/Base";
-import { userLogin } from "../Services/user-service";
+import { login } from "../Services/user-service";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMailOutline, IoLockClosedOutline } from "react-icons/io5";
@@ -31,7 +31,7 @@ export default function Login() {
       return;
     }
 
-    userLogin(formData)
+    login(formData)
       .then((resp) => {
         console.log(resp);
         console.log("success log");
