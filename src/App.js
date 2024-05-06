@@ -55,6 +55,7 @@ function App() {
           <Route path="maps" element={<Maps />} />
           <Route path="description" element={<EventDescription />} />
         </Route>
+        {/* <Route path="/event/description" element={<EventDescription />} /> */}
         <Route path="/event/maps" element={<Maps />} />
       </Routes>
     </BrowserRouter>

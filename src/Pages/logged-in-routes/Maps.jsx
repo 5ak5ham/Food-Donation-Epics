@@ -4,23 +4,47 @@ import "../CSS/maps.css";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import Navbar from "../../Components/Navbar/Navbar";
 import { getCurrentUserDetail } from "../../Services/auth";
+import { getEvents } from "../../Services/user-service";
 import { useGeolocated } from "react-geolocated";
 import { useMapEvents } from "react-leaflet";
+import { postEvent } from "../../Services/user-service";
+import { toast } from "react-toastify";
 
 function Maps() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await getEvents();
+        setEvents(response.data); // Assuming the data you want is directly on the response object
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const eventArray = events;
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     date: "",
     time: "",
-    address: "",
+    location: "",
     latitude: 0,
     longitude: 0,
   });
 
+  const [error, setError] = useState({
+    errors: {},
+    isError: false,
+  });
+
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   const { coords } = useGeolocated({
@@ -48,8 +72,82 @@ function Maps() {
 
   const [clickedLocation, setClickedLocation] = useState(null);
 
+  useEffect(() => {
+    if (clickedLocation) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        latitude: clickedLocation.lat,
+        longitude: clickedLocation.lng,
+      }));
+    }
+  }, [clickedLocation]);
+
   const handleLocationClick = (location) => {
     setClickedLocation(location);
+  };
+
+  // Retrieve the item from local storage
+  const rawData = localStorage.getItem("data");
+  let t = "";
+  // Check if rawData exists
+  if (rawData) {
+    // Parse the JSON string into an object
+    const data = JSON.parse(rawData);
+
+    // Access the token property
+    const token = data.token;
+    t = token;
+    // Log or use the token as needed
+    console.log("Retrieved token:", token);
+  } else {
+    console.log("No data found in local storage.");
+  }
+  console.log(t);
+
+  const submitData = {
+    ...formData,
+    latitude: formData.latitude.toString(),
+    longitude: formData.longitude.toString(),
+  };
+
+  console.log(submitData);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (error.isError) {
+      console.log("Invalid form data");
+      return;
+    }
+
+    postEvent(submitData, t)
+      .then((resp) => {
+        console.log(resp);
+        console.log("success log");
+
+        toast.success("Event Added Successfully", {
+          position: "bottom-center",
+          className: "toast-message",
+        });
+
+        setFormData({
+          title: "",
+          description: "",
+          date: "",
+          time: "",
+          location: "",
+          latitude: 0,
+          longitude: 0,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("There is some error in adding the event");
+        setError({
+          errors: error,
+          isError: true,
+        });
+      });
   };
 
   return (
@@ -67,7 +165,30 @@ function Maps() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={initialPosition}>
+            {eventArray.map((e) => (
+              <Marker
+                position={[
+                  parseFloat(e.latitude, 10),
+                  parseFloat(e.longitude, 10),
+                ]}
+                key={e.id}
+              >
+                <Popup>
+                  NAME : {e.title}
+                  <br />
+                  <button>
+                    <Link
+                      to={"/event/description"}
+                      state={{ event: e }}
+                      className="text-blue font-bold"
+                    >
+                      View More About Event
+                    </Link>
+                  </button>
+                </Popup>
+              </Marker>
+            ))}
+            {/* <Marker position={initialPosition}>
               <Popup className="bg-red">
                 <button>
                   <Link to="/event/description" className="text-blue font-bold">
@@ -75,22 +196,13 @@ function Maps() {
                   </Link>
                 </button>
               </Popup>
-            </Marker>
-            <Marker position={mapCenter}>
-              <Popup className="bg-red">
-                <button>
-                  <Link to="/event/description" className="text-blue font-bold">
-                    View More
-                  </Link>
-                </button>
-              </Popup>
-            </Marker>
+            </Marker> */}
             <LocationMarker onLocationClick={handleLocationClick} />
           </MapContainer>
         </div>
         {user?.role === 1 ? (
           <div className="col-span-1 bg-yellow-100 flex items-center justify-center">
-            <form className="w-full max-w-md p-5">
+            <form className="w-full max-w-md p-5" onSubmit={handleSubmit}>
               <h2 className="text-black font-bold align-middle ml-[165px] mb-[20px]">
                 Add New Event
               </h2>
@@ -156,7 +268,7 @@ function Maps() {
                   id="time"
                   name="time"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="00:00 am/pm"
+                  placeholder="00:00 in 24 hour format"
                   value={formData.time}
                   onChange={handleChange}
                 />
@@ -169,11 +281,11 @@ function Maps() {
                   Address
                 </label>
                 <textarea
-                  id="address"
-                  name="address"
+                  id="location"
+                  name="location"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Enter Description"
-                  value={formData.address}
+                  placeholder="Enter location"
+                  value={formData.location}
                   onChange={handleChange}
                 />
               </div>
@@ -181,19 +293,32 @@ function Maps() {
               <input
                 type="text"
                 id="latitude"
-                name="time"
+                name="latitude"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="00:00 am/pm"
-                value={clickedLocation?.lat ? clickedLocation.lat : 0}
+                placeholder="Enter latitude"
+                value={formData.latitude.toString()}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    latitude: parseFloat(e.target.value),
+                  })
+                }
               />
               <input
                 type="text"
                 id="longitude"
-                name="time"
+                name="longitude"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="00:00 am/pm"
-                value={clickedLocation?.lng ? clickedLocation.lng : 0}
+                placeholder="Enter longitude"
+                value={formData.longitude.toString()}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    longitude: parseFloat(e.target.value),
+                  })
+                }
               />
+
               <div className="flex justify-center">
                 <button
                   type="submit"

@@ -31,3 +31,18 @@ export const isVerified = (email) => {
     params: { email },
   });
 };
+
+/* Events */
+export const getEvents = (event) => {
+  return myAxios.get("http://localhost:8000/org/events/", event);
+};
+
+export const postEvent = (event, token) => {
+  return myAxios
+    .post("http://localhost:8000/org/events/", event, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+    .then((response) => response.data);
+};

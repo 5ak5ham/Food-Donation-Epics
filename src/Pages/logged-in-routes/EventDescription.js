@@ -1,7 +1,46 @@
 import React from "react";
 import Base from "../../Components/Base";
+import { useLocation } from "react-router-dom";
 
 function EventDescription() {
+  const location = useLocation();
+  // console.log(location);
+  const event = location.state;
+  console.log(event);
+
+  function formatDate(dateString) {
+    // Parse the date from the string
+    const [day, month, year] = dateString
+      .split("-")
+      .map((num) => parseInt(num, 10));
+
+    // Create a new Date object (Note: Month is 0-indexed in JavaScript Date)
+    const date = new Date(year, month - 1, day);
+
+    // Use toLocaleDateString to format the date as "6 May, 2024"
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  }
+
+  function formatTime(timeString) {
+    // Split the time string into hours, minutes, and seconds
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+
+    // Determine AM or PM suffix based on the hour
+    const suffix = hours >= 12 ? "PM" : "AM";
+
+    // Convert hour from 24-hour to 12-hour format
+    const hour12 = hours % 12 || 12; // Converts "0" hours to "12"
+
+    // Return the formatted time string
+    return `${hour12}:${minutes < 10 ? "0" + minutes : minutes} ${suffix}`;
+  }
+
+  const date = formatDate(event?.event.date);
+  const time = formatTime(event?.event.time);
   return (
     <>
       <Base />
@@ -14,9 +53,12 @@ function EventDescription() {
               alt=""
             /> */}
             <div>
-              <h2 className="text-2xl font-semibold">EVENT NAME</h2>
-              <p className="text-sm text-gray-500">Organizer</p>
-              <p className="text-sm text-gray-500">City</p>
+              <h2 className="text-2xl font-semibold">{event?.event.title}</h2>
+              <p className="text-sm text-gray-500 mb-2">Organizer</p>
+              <h3 className="text-sm font-semibold">About the event</h3>
+              <p className="text-sm text-gray-500">
+                {event?.event.description}
+              </p>
               {/* <div className="flex mt-1">
                 <FaStar className="text-yellow-400" />
                 <FaStar className="text-yellow-400" />
@@ -50,14 +92,15 @@ function EventDescription() {
             <div>
               <h3 className="font-semibold text-lg">Additional Information</h3>
               <p>
-                <strong>Date:</strong> June 5, 1992
+                <strong>Date Of Event: </strong>
+                {date}
               </p>
               <p>
-                <strong>Time:</strong> 10:00 AM
+                <strong>Time Of Event: </strong> {time}
               </p>
             </div>
             <div>
-              <button className="ml-[1150px] bg-green-400 hover:bg-green-500 text-black font-bold py-2 px-4 rounded-l">
+              <button className="ml-[1250px] bg-green-400 hover:bg-green-500 text-black font-bold py-2 px-4 rounded-l">
                 Volunteer
               </button>
             </div>
