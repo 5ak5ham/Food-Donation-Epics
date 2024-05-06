@@ -165,7 +165,8 @@ const Navbar = () => {
                 </Link>
               ) : (
                 <Link className="mr-[50px]" to="/ngo/dashboard">
-                  Welcome, {user ? user.organization.organization_name : "User"}
+                  Welcome,{" "}
+                  {user ? user.organization?.organization_name : "User"}
                 </Link>
               )}
               {/* Welcome, {user ? user.name : "User"} */}
