@@ -108,6 +108,22 @@ function UserDashboard() {
           </div>
         </div>
       </div> */}
+        <h1 className="mt-[50px] font-bold text-mono">COMMENTS</h1>
+
+        <div className="bg-transparent shadow-2xl rounded-lg p-6 items-start md:items-center justify-between">
+          <p className="text-sm shadow-md w-full p-3 text-gray-500 mb-[10px] ">
+            Product Designer
+          </p>
+          <p className="text-sm shadow-md w-full p-3 text-gray-500 mb-[10px] ">
+            Product Designer
+          </p>
+          <p className="text-sm shadow-md w-full p-3 text-gray-500 mb-[10px] ">
+            Product Designer
+          </p>
+          <p className="text-sm shadow-md w-full p-3 text-gray-500 mb-[10px] ">
+            Product Designer
+          </p>
+        </div>
       </div>
     </>
   );

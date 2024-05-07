@@ -6,13 +6,21 @@ import {
   isLoggedIn,
 } from "../../Services/auth";
 import { BsBellFill } from "react-icons/bs";
+import { LiaCheckCircle } from "react-icons/lia";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const handleDropdown = () => {
-    const dropdown = document.getElementById("login-register-dropdown");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleModal = () => setIsOpen(!isOpen);
+
+  // Close the modal when clicking anywhere on the page
+  const closeModal = () => setIsOpen(false);
+
+  const handleDropdown = (id) => {
+    const dropdown = document.getElementById(id);
     if (dropdown.classList.contains("hidden")) {
       dropdown.classList.remove("hidden");
       dropdown.classList.add("block");
@@ -79,7 +87,7 @@ const Navbar = () => {
             <>
               <div className="relative inline-block">
                 <li
-                  onClick={handleDropdown}
+                  onClick={() => handleDropdown("login-register-dropdown")}
                   className="font-bold text-black hover:text-orange-500 transition-colors duration-200"
                 >
                   <Link to="/" className="no-underline mr-[10px]">
@@ -145,12 +153,38 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="flex items-center">
+      <div className="flex items-center z-10">
         {login && (
           <>
-            <button>
-              <BsBellFill className=" text-black hover:text-orange-500 transition-colors duration-200 mr-[30px]" />
+            {/* <button onClick={() => handleDropdown("notification-dropdown")}>
+              <BsBellFill className="text-black hover:text-orange-500 transition-colors duration-200 mr-[30px] relative inline-block" />
             </button>
+            <div
+              id="notification-dropdown"
+              className="relative z-10 hidden mt-[150px] bg-orange-300 rounded-md shadow-md"
+            >
+              Thank
+            </div> */}
+            <button onClick={toggleModal}>
+              <BsBellFill className="text-black hover:text-orange-500 transition-colors duration-200 mr-8 relative inline-block" />
+            </button>
+            {isOpen && (
+              <div
+                onClick={closeModal}
+                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+              >
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="bg-green-50 p-6 rounded-lg shadow-lg"
+                >
+                  <h4 className="text-lg font-bold mb-4">Notifications</h4>
+                  <p className="shadow-xl flex align-middle">
+                    <LiaCheckCircle className="mr-[10px]" /> Thank You For
+                    Registering.
+                  </p>
+                </div>
+              </div>
+            )}
 
             <button
               onClick={logout}
@@ -206,304 +240,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-// import React, { useEffect, useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import {
-//   doLogout,
-//   getCurrentUserDetail,
-//   isLoggedIn,
-// } from "../../Services/auth";
-// import { toast } from "react-toastify";
-
-// const Navbar = () => {
-//   const navigate = useNavigate();
-
-//   const handleDropdown = () => {
-//     const dropdown = document.getElementById("login-register-dropdown");
-//     if (dropdown.classList.contains("hidden")) {
-//       dropdown.classList.remove("hidden");
-//       dropdown.classList.add("block");
-//     } else {
-//       dropdown.classList.add("hidden");
-//       dropdown.classList.remove("block");
-//     }
-//   };
-
-//   const [login, setLogin] = useState(false);
-//   const [user, setUser] = useState(undefined);
-
-//   useEffect(() => {
-//     setLogin(isLoggedIn());
-//     setUser(getCurrentUserDetail());
-//   }, [login]);
-
-//   const logout = () => {
-//     doLogout(() => {
-//       setLogin(false);
-//       toast.success("Logged Out", {
-//         position: "bottom-center",
-//         className: "toast-message",
-//       });
-//       navigate("/");
-//     });
-//   };
-
-//   return (
-//     <nav className="bg-orange-300 flex justify-between items-center p-2 text-black">
-//       <div className="flex items-center">
-//         <ul className="flex list-none pl-44 pr-44">
-//           {!login && (
-//             <>
-//               <li className="mr-4">
-//                 <Link to="/">Home</Link>
-//               </li>
-//               <li className="mr-4">
-//                 <a
-//                   href="https://dashboard.tribal.gov.in/ngo.aspx"
-//                   target="_blank"
-//                   rel="noreferrer"
-//                 >
-//                   Dashboard
-//                 </a>
-//               </li>
-//               <li className="font-bold">
-//                 <Link to="/about">About </Link>
-//               </li>
-//             </>
-//           )}
-//           {login && (
-//             <>
-//               <div className="relative inline-block">
-//                 <button
-//                   onClick={handleDropdown}
-//                   className="font-bold hover:text-black"
-//                 >
-//                   <Link to="/" className="text-black no-underline">
-//                     Home
-//                   </Link>
-//                 </button>
-//                 <div
-//                   id="login-register-dropdown"
-//                   className="absolute z-10 hidden bg-orange-300 rounded-md shadow-lg"
-//                 >
-//                   <a
-//                     href="#login"
-//                     className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//                   >
-//                     Bank details
-//                   </a>
-//                   <a
-//                     href="#login"
-//                     className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//                   >
-//                     Update Bank details
-//                   </a>
-//                   <a
-//                     href="#login"
-//                     className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//                   >
-//                     View
-//                   </a>
-//                   <Link
-//                     to="/ngo/application"
-//                     className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//                   >
-//                     Application Form
-//                   </Link>
-//                 </div>
-//               </div>
-//               <a
-//                 className="ml-2 font-bold hover:text-black"
-//                 href="https://dashboard.tribal.gov.in/ngo.aspx"
-//                 target="_blank"
-//                 rel="noreferrer"
-//               >
-//                 Dashboard
-//               </a>
-//               <button
-//                 className="font-bold hover:text-black"
-//                 style={{ marginLeft: "3px" }}
-//               >
-//                 <Link className="text-black no-underline" to="/about">
-//                   About
-//                 </Link>
-//               </button>
-//               <button
-//                 className="font-bold hover:text-black"
-//                 style={{ marginLeft: "3px" }}
-//               >
-//                 <Link className="text-black no-underline" to="/event/maps">
-//                   Maps
-//                 </Link>
-//               </button>
-//             </>
-//           )}
-//         </ul>
-//       </div>
-
-//       <div className="flex items-center">
-//         {login && (
-//           <>
-//             <button onClick={logout} className="font-bold hover:text-black">
-//               Logout
-//             </button>
-//             <h3 className="font-bold">Welcome, {user.name}</h3>
-//           </>
-//         )}
-//         {!login && (
-//           <div className="relative inline-block">
-//             <button
-//               onClick={handleDropdown}
-//               className="font-bold hover:text-black"
-//             >
-//               Login / Register
-//             </button>
-//             <div
-//               id="login-register-dropdown"
-//               className="absolute z-10 hidden bg-orange-300 rounded-md shadow-lg"
-//             >
-//               <a
-//                 href="#login"
-//                 className="block px-4 py-2 hidden text-black font-semibold no-underline hover:bg-orange-400"
-//               >
-//                 FOR USER
-//               </a>
-//               <Link
-//                 to="/login"
-//                 className="block px-4 py-2 hidden text-black font-semibold no-underline hover:bg-orange-400"
-//               >
-//                 FOR NGO
-//               </Link>
-//             </div>
-//           </div>
-//         )}
-//       </div>
-//     </nav>
-//   );
-// };
-
-// export default Navbar;
-// <nav className="bg-orange-300 flex justify-between items-center p-2 text-grey-700">
-//   <div className="flex items-center">
-//     <ul className="flex list-none pl-44 pr-44 font-bold">
-//       {!login && (
-//         <>
-//           <li className="mr-4">
-//             <Link to="/">Home</Link>
-//           </li>
-//           <li className="mr-4">
-//             <a
-//               href="https://dashboard.tribal.gov.in/ngo.aspx"
-//               target="_blank"
-//               rel="noreferrer"
-//             >
-//               Dashboard
-//             </a>
-//           </li>
-//           <li className="font-bold">
-//             <Link to="/about">About</Link>
-//           </li>
-//         </>
-//       )}
-//       {login && (
-//         <>
-//           <div className="relative inline-block">
-//             <button
-//               onClick={handleDropdown}
-//               className="font-bold hover:text-black"
-//             >
-//               <Link to="/" className="text-black no-underline">
-//                 Home
-//               </Link>
-//             </button>
-//             <div
-//               id="login-register-dropdown"
-//               className="absolute z-10 hidden bg-orange-300 rounded-md shadow-lg"
-//             >
-//               <a
-//                 href="#login"
-//                 className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//               >
-//                 Bank details
-//               </a>
-//               <a
-//                 href="#login"
-//                 className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//               >
-//                 Update Bank details
-//               </a>
-//               <a
-//                 href="#login"
-//                 className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//               >
-//                 View
-//               </a>
-//               <Link
-//                 to="/ngo/application"
-//                 className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//               >
-//                 Application Form
-//               </Link>
-//             </div>
-//           </div>
-//           <a
-//             className="ml-2 font-bold hover:text-black"
-//             href="https://dashboard.tribal.gov.in/ngo.aspx"
-//             target="_blank"
-//             rel="noreferrer"
-//           >
-//             Dashboard
-//           </a>
-//           <button className="font-bold hover:text-black">
-//             <Link className="text-black no-underline" to="/about">
-//               About
-//             </Link>
-//           </button>
-//           <button className="font-bold hover:text-black">
-//             <Link className="text-black no-underline" to="/event/maps">
-//               Maps
-//             </Link>
-//           </button>
-//         </>
-//       )}
-//     </ul>
-//   </div>
-
-//   <div className="flex items-center">
-//     {login && (
-//       <>
-//         <button onClick={logout} className="font-bold hover:text-black">
-//           Logout
-//         </button>
-//         <h3 className="font-bold">Welcome, {user ? user.name : "User"}</h3>
-//       </>
-//     )}
-//     {!login && (
-//       <div className="relative inline-block">
-//         <button
-//           onClick={handleDropdown}
-//           className="font-bold hover:text-black mr-[130px]"
-//         >
-//           Login / Register
-//         </button>
-//         <div
-//           id="login-register-dropdown"
-//           className="absolute z-10 hidden bg-orange-300 rounded-md shadow-lg"
-//         >
-//           <Link
-//             className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//             to="/userLogin"
-//           >
-//             FOR USER
-//           </Link>
-//           <Link
-//             to="/login"
-//             className="block px-4 py-2 text-black font-semibold no-underline hover:bg-orange-400"
-//           >
-//             FOR NGO
-//           </Link>
-//         </div>
-//       </div>
-//     )}
-//   </div>
-// </nav>
