@@ -7,7 +7,7 @@ import { getCurrentUserDetail } from "../../Services/auth";
 import { getEvents } from "../../Services/user-service";
 import { useGeolocated } from "react-geolocated";
 import { useMapEvents } from "react-leaflet";
-import { postEvent } from "../../Services/user-service";
+import { postEvent, postFoodRequest } from "../../Services/user-service";
 import { toast } from "react-toastify";
 
 function Maps() {
@@ -38,6 +38,16 @@ function Maps() {
     longitude: 0,
   });
 
+  const [foodDonation, setFoodDonation] = useState({
+    name_donor: "",
+    food_type: "",
+    perishability: "",
+    delivery_method: "",
+    quantity: "",
+    scheduled_date: "",
+    scheduled_time: "",
+  });
+
   const [error, setError] = useState({
     errors: {},
     isError: false,
@@ -45,6 +55,12 @@ function Maps() {
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+  const handleFoodChange = (event) => {
+    setFoodDonation({
+      ...foodDonation,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const { coords } = useGeolocated({
@@ -143,6 +159,45 @@ function Maps() {
       .catch((error) => {
         console.log(error);
         toast.error("There is some error in adding the event");
+        setError({
+          errors: error,
+          isError: true,
+        });
+      });
+  };
+
+  console.log(foodDonation);
+  const handleFoodSubmit = (event) => {
+    event.preventDefault();
+
+    if (error.isError) {
+      console.log("Invalid form data");
+      return;
+    }
+
+    postFoodRequest(foodDonation, t)
+      .then((resp) => {
+        console.log(resp);
+        console.log("success log");
+
+        toast.success("Application Submitted Successfully", {
+          position: "bottom-center",
+          className: "toast-message",
+        });
+
+        setFoodDonation({
+          name_donor: "",
+          food_type: "",
+          perishability: "",
+          delivery_method: "",
+          quantity: "",
+          scheduled_date: "",
+          scheduled_time: "",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("There is some error in submitting the application");
         setError({
           errors: error,
           isError: true,
@@ -331,7 +386,7 @@ function Maps() {
           </div>
         ) : (
           <div className="col-span-1 bg-yellow-100 flex items-center justify-center">
-            <form className="w-full max-w-md p-5">
+            <form className="w-full max-w-md p-5" onSubmit={handleFoodSubmit}>
               <h2 className="text-black font-bold align-middle ml-[165px] mb-[20px]">
                 DONATE FOOD ?
               </h2>
@@ -344,12 +399,12 @@ function Maps() {
                 </label>
                 <input
                   type="text"
-                  id="donorName"
-                  name="donorName"
+                  id="name_donor"
+                  name="name_donor"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Enter Donor's Name"
-                  value={formData.donorName}
-                  onChange={handleChange}
+                  value={foodDonation.name_donor}
+                  onChange={handleFoodChange}
                 />
               </div>
               <div className="mb-4">
@@ -360,15 +415,34 @@ function Maps() {
                   Pickup or Drop
                 </label>
                 <select
-                  id="deliveryMethod"
-                  name="deliveryMethod"
+                  id="delivery_method"
+                  name="delivery_method"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  value={formData.deliveryMethod}
-                  onChange={handleChange}
+                  value={foodDonation.delivery_method}
+                  onChange={handleFoodChange}
                 >
                   <option value="">Select Option</option>
-                  <option value="pickup">Pickup</option>
-                  <option value="drop">Drop</option>
+                  <option value="PICK-UP">Pickup</option>
+                  <option value="DROP">Drop</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="perishability"
+                  className="block text-sm font-bold text-gray-700"
+                >
+                  Perishability
+                </label>
+                <select
+                  id="perishability"
+                  name="perishability"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  value={foodDonation.perishability}
+                  onChange={handleFoodChange}
+                >
+                  <option value="">Select Option</option>
+                  <option value="PERISHABLE">Perishable</option>
+                  <option value="NON-PERISHABLE">Non Perishable</option>
                 </select>
               </div>
               <div className="mb-4">
@@ -376,38 +450,19 @@ function Maps() {
                   htmlFor="deliveryMethod"
                   className="block text-sm font-bold text-gray-700"
                 >
-                  Type
+                  Type Of Food
                 </label>
                 <select
-                  id="type"
-                  name="type"
+                  id="food_type"
+                  name="food_type"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  value={formData.type}
-                  onChange={handleChange}
+                  value={foodDonation.food_type}
+                  onChange={handleFoodChange}
                 >
                   <option value="">Select Option</option>
-                  <option value="pickup">Perishable</option>
-                  <option value="drop">Non Perishable</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="deliveryMethod"
-                  className="block text-sm font-bold text-gray-700"
-                >
-                  Type 2
-                </label>
-                <select
-                  id="type2"
-                  name="type2"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  value={formData.type2}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Option</option>
-                  <option value="pickup">Veg</option>
-                  <option value="drop">Non Veg</option>
-                  <option value="drop">Vegan</option>
+                  <option value="VEGETARIAN">Veg</option>
+                  <option value="NON-VEGETARIAN">Non Veg</option>
+                  <option value="VEGAN">Vegan</option>
                 </select>
               </div>
               <div className="mb-4">
@@ -419,12 +474,12 @@ function Maps() {
                 </label>
                 <input
                   type="text"
-                  id="time"
-                  name="time"
+                  id="scheduled_time"
+                  name="scheduled_time"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="00:00 am/pm"
-                  value={formData.time}
-                  onChange={handleChange}
+                  value={foodDonation.scheduled_time}
+                  onChange={handleFoodChange}
                 />
               </div>
               <div className="mb-4">
@@ -436,29 +491,12 @@ function Maps() {
                 </label>
                 <input
                   type="text"
-                  id="date"
-                  name="date"
+                  id="scheduled_date"
+                  name="scheduled_date"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="DD-MM-YYYY"
-                  value={formData.date}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="foodType"
-                  className="block text-sm font-bold text-gray-700"
-                >
-                  Type of Food
-                </label>
-                <input
-                  type="text"
-                  id="foodType"
-                  name="foodType"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Enter Type of Food"
-                  value={formData.foodType}
-                  onChange={handleChange}
+                  value={foodDonation.scheduled_date}
+                  onChange={handleFoodChange}
                 />
               </div>
               <div className="mb-4">
@@ -472,11 +510,19 @@ function Maps() {
                   type="text"
                   id="quantity"
                   name="quantity"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 mb-3"
                   placeholder="Enter Quantity"
-                  value={formData.quantity}
-                  onChange={handleChange}
+                  value={foodDonation.quantity}
+                  onChange={handleFoodChange}
                 />
+                <div className="flex justify-center">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-yellow-500 text-black font-bold rounded hover:bg-blue-700"
+                  >
+                    Submit Application
+                  </button>
+                </div>
               </div>
             </form>
           </div>

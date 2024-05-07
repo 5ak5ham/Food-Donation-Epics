@@ -210,7 +210,7 @@ const Navbar = () => {
         {!login && (
           <div className="relative inline-block">
             <button
-              onClick={handleDropdown}
+              onClick={() => handleDropdown("login-register-dropdown")}
               className="font-bold hover:text-orange-500 mr-8 transition-colors duration-200"
             >
               Login / Register
