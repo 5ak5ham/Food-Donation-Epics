@@ -105,6 +105,7 @@ function Maps() {
   // Retrieve the item from local storage
   const rawData = localStorage.getItem("data");
   let t = "";
+  let approvedStatus;
   // Check if rawData exists
   if (rawData) {
     // Parse the JSON string into an object
@@ -112,13 +113,14 @@ function Maps() {
 
     // Access the token property
     const token = data.token;
-    t = token;
+    approvedStatus = data?.user?.organization?.is_approved;
     // Log or use the token as needed
     console.log("Retrieved token:", token);
   } else {
     console.log("No data found in local storage.");
   }
   console.log(t);
+  console.log(approvedStatus);
 
   const submitData = {
     ...formData,
@@ -367,12 +369,18 @@ function Maps() {
               />
 
               <div className="flex justify-center">
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-yellow-500 text-black font-bold rounded hover:bg-blue-700"
-                >
-                  Add Event
-                </button>
+                {approvedStatus ? (
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-yellow-500 text-black font-bold rounded hover:bg-blue-700"
+                  >
+                    Add Event
+                  </button>
+                ) : (
+                  <p className="font-bold">
+                    Get Your NGO Approved to create an event!!
+                  </p>
+                )}
               </div>
             </form>
           </div>

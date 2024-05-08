@@ -47,6 +47,14 @@ function NgoProfile() {
 
   const date1 = formatDate(dateStr);
 
+  const calculateAverage = () => {
+    if (ratings.length === 0) return 0; // Check if the ratings array is empty
+    const total = ratings.reduce((acc, item) => acc + item.rating, 0); // Sum up all ratings
+    return (total / ratings.length).toFixed(1); // Calculate the average and fix to one decimal place
+  };
+
+  const average = calculateAverage();
+
   return (
     <>
       <Base />
@@ -59,12 +67,9 @@ function NgoProfile() {
                 {event?.event?.event?.organization.organization_name}
               </h2>
               <div className="flex mt-1">
-                <FaStar className="text-yellow-400" />
-                <FaStar className="text-yellow-400" />
-                <FaStar className="text-yellow-400" />
-                <FaStar className="text-yellow-400" />
-                <FaStar className="text-yellow-400" />
-                <span className="text-gray-600 ml-2">8.6</span>
+                <span className="text-gray-600 ml-2">
+                  Rating : {average} out of 5
+                </span>
               </div>
             </div>
           </div>
