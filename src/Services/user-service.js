@@ -89,3 +89,30 @@ export const submitLicense = (fileData, id) => {
     )
     .then((response) => response.data);
 };
+
+/* Rating an NGO */
+export const ratingFn = (rating, description, id, token) => {
+  // Make sure to return the axios.post call directly
+  return myAxios
+    .post(
+      `http://127.0.0.1:8000/accounts/api/rateOrg/${id}/`,
+      {
+        rating: rating,
+        description: description,
+      },
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
+    )
+    .then((response) => response.data);
+};
+
+/* GET RATING BY ORG NAME*/
+
+export const getRatingsByOrganization = (organizationName) => {
+  return myAxios.get("http://localhost:8000/accounts/api/ratings/org/", {
+    params: { organization_name: organizationName },
+  });
+};

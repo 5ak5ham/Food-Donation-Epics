@@ -103,7 +103,7 @@ function EventDescription() {
             <div>
               <h2 className="text-2xl font-semibold">{event?.event.title}</h2>
               <p className="text-sm text-gray-500 mb-2">
-                <Link to="/ngo/dashboard">
+                <Link to={"/ngo/profile"} state={{ event: event }}>
                   {event?.event?.organization?.organization_name}
                 </Link>
               </p>
@@ -125,7 +125,7 @@ function EventDescription() {
               <h3 className="font-semibold text-lg">NGO Contact Information</h3>
               <p>
                 <strong>Phone:</strong>{" "}
-                {event?.event?.organization?.organization_name}
+                {event?.event?.organization?.user_details.phone_number}
               </p>
               <p>
                 <strong>Address:</strong> 525 6th Street, New York, NY 10011

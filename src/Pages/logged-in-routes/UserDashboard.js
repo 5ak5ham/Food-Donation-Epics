@@ -32,24 +32,16 @@ function UserDashboard() {
               </h2>
               <p className="text-sm text-gray-500">Product Designer</p>
               <p className="text-sm text-gray-500">New York, NY</p>
-              <div className="flex mt-1">
-                <FaStar className="text-yellow-400" />
-                <FaStar className="text-yellow-400" />
-                <FaStar className="text-yellow-400" />
-                <FaStar className="text-yellow-400" />
-                <FaStar className="text-yellow-400" />
-                <span className="text-gray-600 ml-2">8.6</span>
-              </div>
             </div>
           </div>
-          <div className="flex mt-4 md:mt-0">
+          {/* <div className="flex mt-4 md:mt-0">
             <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-l">
               <Link to="/user/rate">Rate User</Link>
             </button>
             <button className="bg-red-500 hover:bg-red-800 text-black font-bold py-2 px-4 rounded-r">
               <Link to="/user/report">Report User</Link>
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="bg-transparent shadow-2xl rounded-lg p-6 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -108,22 +100,6 @@ function UserDashboard() {
           </div>
         </div>
       </div> */}
-        <h1 className="mt-[50px] font-bold text-mono">COMMENTS</h1>
-
-        <div className="bg-transparent shadow-2xl rounded-lg p-6 items-start md:items-center justify-between">
-          <p className="text-sm shadow-md w-full p-3 text-gray-500 mb-[10px] ">
-            Product Designer
-          </p>
-          <p className="text-sm shadow-md w-full p-3 text-gray-500 mb-[10px] ">
-            Product Designer
-          </p>
-          <p className="text-sm shadow-md w-full p-3 text-gray-500 mb-[10px] ">
-            Product Designer
-          </p>
-          <p className="text-sm shadow-md w-full p-3 text-gray-500 mb-[10px] ">
-            Product Designer
-          </p>
-        </div>
       </div>
     </>
   );

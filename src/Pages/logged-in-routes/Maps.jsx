@@ -205,10 +205,11 @@ function Maps() {
       });
   };
 
+  console.log(eventArray);
   return (
     <>
       <Navbar />
-      <div className="grid grid-cols-2 h-screen">
+      <div className="  grid grid-cols-2 h-screen">
         <div className="col-span-1">
           <MapContainer
             key={`${mapCenter[0]}-${mapCenter[1]}`}
@@ -243,15 +244,6 @@ function Maps() {
                 </Popup>
               </Marker>
             ))}
-            {/* <Marker position={initialPosition}>
-              <Popup className="bg-red">
-                <button>
-                  <Link to="/event/description" className="text-blue font-bold">
-                    View More
-                  </Link>
-                </button>
-              </Popup>
-            </Marker> */}
             <LocationMarker onLocationClick={handleLocationClick} />
           </MapContainer>
         </div>

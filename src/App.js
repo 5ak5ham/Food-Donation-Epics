@@ -17,9 +17,8 @@ import NgoDashboard from "./Pages/logged-in-routes/NgoDashboard";
 import EditNgo from "./Pages/logged-in-routes/EditNgo";
 import ReportNgo from "./Pages/logged-in-routes/ReportNgo";
 import RateNgo from "./Pages/logged-in-routes/RateNgo";
-import RateUser from "./Pages/logged-in-routes/RateUser";
 import EditUser from "./Pages/logged-in-routes/EditUser";
-import ReportUser from "./Pages/logged-in-routes/ReportUser";
+import NgoProfile from "./Pages/logged-in-routes/NgoProfile";
 
 function App() {
   return (
@@ -43,13 +42,12 @@ function App() {
           <Route path="edit" element={<EditNgo />} />
           <Route path="report" element={<ReportNgo />} />
           <Route path="rate" element={<RateNgo />} />
+          <Route path="profile" element={<NgoProfile />} />
         </Route>
         <Route path="/user" element={<PrivateRouter />}>
           <Route path="application" element={<Applicationform />} />
           <Route path="dashboard" element={<UserDashboard />} />
           <Route path="edit" element={<EditUser />} />
-          <Route path="report" element={<ReportUser />} />
-          <Route path="rate" element={<RateUser />} />
         </Route>
         <Route path="/event" element={<PrivateRouter />}>
           <Route path="maps" element={<Maps />} />
