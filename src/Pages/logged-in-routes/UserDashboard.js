@@ -1,5 +1,4 @@
 import React from "react";
-import { FaStar } from "react-icons/fa";
 import { GrFormEdit } from "react-icons/gr";
 // Using react-icons for star ratings
 import { Link } from "react-router-dom";

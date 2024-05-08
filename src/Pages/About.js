@@ -1,6 +1,7 @@
 import React from "react";
 import Base from "../Components/Base";
 import HomeBase from "./HomeBase";
+import TeamMembers from "./TeamMembers";
 const aboutSection = [
   {
     id: 1,
@@ -25,6 +26,86 @@ const aboutSection = [
   },
 ];
 
+const teamMembersData = [
+  {
+    name: "Saksham Agrawal",
+    title: "Frontend, Integration",
+    imageUrl:
+      "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?fit=clamp&w=400&h=400&q=80",
+    socialLinks: [
+      { icon: "mdi-linkedin", url: "#" },
+      { icon: "mdi-twitter", url: "#" },
+      { icon: "mdi-instagram", url: "#" },
+    ],
+  },
+  {
+    name: "Aditya Lala",
+    title: "Backend",
+    imageUrl:
+      "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?fit=clamp&w=400&h=400&q=80",
+    socialLinks: [
+      { icon: "mdi-linkedin", url: "#" },
+      { icon: "mdi-twitter", url: "#" },
+      { icon: "mdi-instagram", url: "#" },
+    ],
+  },
+  {
+    name: "Sarthak Mishra",
+    title: "Frontend, Documentation",
+    imageUrl:
+      "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?fit=clamp&w=400&h=400&q=80",
+    socialLinks: [
+      { icon: "mdi-linkedin", url: "#" },
+      { icon: "mdi-twitter", url: "#" },
+      { icon: "mdi-instagram", url: "#" },
+    ],
+  },
+  {
+    name: "Sanskar Babel",
+    title: "Frontend, Backend",
+    imageUrl:
+      "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?fit=clamp&w=400&h=400&q=80",
+    socialLinks: [
+      { icon: "mdi-linkedin", url: "#" },
+      { icon: "mdi-twitter", url: "#" },
+      { icon: "mdi-instagram", url: "#" },
+    ],
+  },
+  {
+    name: "Anshul",
+    title: "Documentation",
+    imageUrl:
+      "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?fit=clamp&w=400&h=400&q=80",
+    socialLinks: [
+      { icon: "mdi-linkedin", url: "#" },
+      { icon: "mdi-twitter", url: "#" },
+      { icon: "mdi-instagram", url: "#" },
+    ],
+  },
+  {
+    name: "Zuhair",
+    title: "Documentation",
+    imageUrl:
+      "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?fit=clamp&w=400&h=400&q=80",
+    socialLinks: [
+      { icon: "mdi-linkedin", url: "#" },
+      { icon: "mdi-twitter", url: "#" },
+      { icon: "mdi-instagram", url: "#" },
+    ],
+  },
+  {
+    name: "Aryavardhan Jain",
+    title: "Backend, Integration",
+    imageUrl:
+      "https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?fit=clamp&w=400&h=400&q=80",
+    socialLinks: [
+      { icon: "mdi-linkedin", url: "#" },
+      { icon: "mdi-twitter", url: "#" },
+      { icon: "mdi-instagram", url: "#" },
+    ],
+  },
+  // Add more team members here...
+];
 function About() {
   const list = aboutSection;
   // const size = aboutSection.length;
@@ -38,6 +119,15 @@ function About() {
             <Abt abtObj={about} key={about.id} />
           ))}
         </ul>
+        <h1 class="text-gray-900 bg-yellow-100 text-4xl font-bold ml-[500px] pb-[50px]">
+          Meet the Team
+        </h1>
+      </div>
+
+      <div className="flex flex-wrap bg-yellow-100">
+        {teamMembersData.map((member, index) => (
+          <TeamMembers key={index} {...member} />
+        ))}
       </div>
     </>
   );
